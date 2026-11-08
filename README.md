@@ -1,6 +1,35 @@
 # Social-Sanitizer
 The open-source tool that helps women block and report creeps on Instagram. Allies welcome: point it at any woman’s post and report the creeps for her.
 
+## Why this tool exists
+
+Women who post on Instagram often get sexually abusive comments, and Instagram makes
+cleaning them up slow and repetitive. That work falls on the women being targeted. As of
+November 2026:
+
+- **No automated reporting or blocking.** Instagram's Terms of Use forbid automating
+  actions on the platform, and its official API has no way to report a comment or block
+  an account. Professional accounts can hide or delete comments on their own posts through
+  the API, but that doesn't report the person who wrote the comment.
+- **No automated scanning.** The same terms forbid software from scrolling through
+  comments and reading them. On a post with hundreds or thousands of comments, someone
+  has to scroll through and read every one by hand to find the abusive ones.
+- **Blocking closes the post.** After you block one offender, Instagram closes the post.
+  You have to reopen it and search the comments from the top again to find the next one,
+  once for every offender.
+- **One report at a time.** Each report means stepping through several screens to pick a
+  reason. The bulk "Manage" comments tool can delete comments or block their authors in
+  groups, but it can't report them, so Instagram is never told about the abuse.
+
+### How Social Sanitizer works within these limits
+
+You stay in control: you scroll the post and you file each report or block yourself.
+Social Sanitizer only reads comments already loaded on your screen. It never clicks,
+reports or blocks anything on Instagram for you. A small AI model runs on your own
+computer to flag likely abusive comments and outline them on the page. One click jumps
+straight to each one, so after the post closes you can pick up where you left off
+instead of reading the whole thread again.
+
 ## Desktop app (early preview)
 
 A Python desktop app with a built-in browser. Log in to Instagram inside it, open a
