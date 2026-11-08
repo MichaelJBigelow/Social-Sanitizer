@@ -26,6 +26,21 @@ social-sanitizer            # opens instagram.com
 social-sanitizer --demo     # offline demo post, no login needed
 ```
 
+### macOS launcher
+
+To get a double-clickable app with no Terminal window, build the launcher after
+setting up the venv:
+
+```bash
+scripts/make-mac-launcher.sh
+```
+
+This creates `~/Applications/Social Sanitizer.app`. To build it somewhere else, pass a
+folder, for example `scripts/make-mac-launcher.sh /Applications`. Open the app from Launchpad,
+Spotlight or Finder, or drag it to the Dock. It shows up as "Social Sanitizer" with its
+own icon. Output goes to `~/Library/Logs/Social Sanitizer/app.log`. The launcher points
+at this checkout, so re-run the script if you move the repository.
+
 On first run the model, [Qwen3-1.7B](https://huggingface.co/Qwen/Qwen3-1.7B), downloads
 (~3.5 GB). After that it loads in a few seconds. It runs on Apple Silicon (MPS), CUDA,
 or the CPU.
