@@ -9,7 +9,7 @@ from pathlib import Path
 
 from platformdirs import user_data_dir
 
-from . import APP_NAME, __version__
+from . import APP_NAME, __version__, desktop
 from .classifier import BACKENDS, DEFAULT_MODEL
 
 
@@ -25,10 +25,13 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
 
 def main(argv: list[str] | None = None) -> int:
+    desktop.ensure_output_streams()  # first, so even argparse errors have somewhere to go
     args = parse_args(argv)
+    desktop.set_windows_app_id()  # must happen before any window is created
 
     # QtWebEngine must be imported before the QApplication exists.
     from PySide6.QtCore import QUrl
+    from PySide6.QtGui import QIcon
     from PySide6.QtWebEngineWidgets import QWebEngineView  # noqa: F401
     from PySide6.QtWidgets import QApplication
 
@@ -37,6 +40,8 @@ def main(argv: list[str] | None = None) -> int:
     app = QApplication(sys.argv[:1])
     app.setApplicationName(APP_NAME)
     app.setApplicationVersion(__version__)
+    app.setDesktopFileName(desktop.DESKTOP_FILE_NAME)
+    app.setWindowIcon(QIcon(str(desktop.icon_path())))
 
     if args.demo:
         demo = resources.files("social_sanitizer").joinpath("demo", "mock_post.html")

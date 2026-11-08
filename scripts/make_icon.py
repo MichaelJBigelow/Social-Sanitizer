@@ -1,6 +1,14 @@
-"""Draw the app icon as a 1024x1024 PNG: python scripts/make_icon.py OUT.png"""
+"""Draw the app icon.
+
+    python scripts/make_icon.py OUT.png    1024x1024 PNG
+    python scripts/make_icon.py OUT.ico    Windows icon (256x256)
+
+The committed src/social_sanitizer/assets/icon.png comes from this script; re-run it
+there if you change the design.
+"""
 
 import sys
+from pathlib import Path
 
 from PySide6.QtCore import QPointF, QRectF, Qt
 from PySide6.QtGui import QColor, QGuiApplication, QImage, QLinearGradient, QPainter, QPainterPath, QPen
@@ -47,6 +55,9 @@ def draw(path: str) -> None:
     p.drawPath(check)
 
     p.end()
+    if Path(path).suffix.lower() == ".ico":
+        # Windows' largest standard icon size; it scales this down for small views.
+        image = image.scaled(256, 256, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
     if not image.save(path):
         raise SystemExit(f"couldn't write {path}")
 

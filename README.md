@@ -38,14 +38,41 @@ inappropriate ones are outlined in red on the page and listed in the side panel.
 Click a row to jump to that comment. Nothing leaves your computer: the model runs
 locally.
 
+Runs on macOS, Windows and Linux.
+
 ### Setup
 
-Requires Python 3.10+.
+Requires Python 3.10–3.13.
+
+**macOS / Linux**
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -e ".[llm,dev]"
+```
+
+**Windows** (PowerShell)
+
+```powershell
+py -3 -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install -e ".[llm,dev]"
+```
+
+On Linux, `pip install torch` pulls in the NVIDIA GPU build (several GB). For a computer
+without an NVIDIA GPU, install the smaller CPU build first:
+
+```bash
+pip install torch --index-url https://download.pytorch.org/whl/cpu
+pip install -e ".[llm,dev]"
+```
+
+Most desktop Linux systems already have the libraries the built-in browser needs. On a
+minimal Debian or Ubuntu install, add them with:
+
+```bash
+sudo apt install libegl1 libgl1 libnss3 libxkbcommon0 libfontconfig1 libdbus-1-3 libxcomposite1 libxdamage1 libxrandr2 libxtst6 libxkbfile1 libxshmfence1 libgbm1 libxslt1.1
 ```
 
 ### Run
@@ -55,24 +82,34 @@ social-sanitizer            # opens instagram.com
 social-sanitizer --demo     # offline demo post, no login needed
 ```
 
-### macOS launcher
-
-To get a double-clickable app with no Terminal window, build the launcher after
-setting up the venv:
-
-```bash
-scripts/make-mac-launcher.sh
-```
-
-This creates `~/Applications/Social Sanitizer.app`. To build it somewhere else, pass a
-folder, for example `scripts/make-mac-launcher.sh /Applications`. Open the app from Launchpad,
-Spotlight or Finder, or drag it to the Dock. It shows up as "Social Sanitizer" with its
-own icon. Output goes to `~/Library/Logs/Social Sanitizer/app.log`. The launcher points
-at this checkout, so re-run the script if you move the repository.
-
 On first run the model, [Qwen3-1.7B](https://huggingface.co/Qwen/Qwen3-1.7B), downloads
-(~3.5 GB). After that it loads in a few seconds. It runs on Apple Silicon (MPS), CUDA,
-or the CPU.
+(~3.5 GB). After that it loads in a few seconds. It uses the GPU when there is one (Apple
+Silicon or NVIDIA) and otherwise the CPU. On the CPU it needs about 8 GB of free memory and
+takes a second or two per comment.
+
+### Launchers
+
+Each script makes a launcher that opens the app with its own icon and no Terminal or
+console window. Build it after setting up the venv, and re-run the script if you move
+the repository. Each one also puts a launcher in this folder, which git ignores.
+
+| System | Command | What you get |
+| --- | --- | --- |
+| macOS | `scripts/make-mac-launcher.sh` | `Social Sanitizer.app` in `~/Applications` (or pass a folder, such as `scripts/make-mac-launcher.sh /Applications`) |
+| Windows | `powershell -ExecutionPolicy Bypass -File scripts\make-windows-launcher.ps1` | A Start Menu shortcut. Add `-Desktop` for a desktop shortcut too |
+| Linux | `scripts/make-linux-launcher.sh` | An entry in your app menu (GNOME, KDE, Xfce and others) |
+
+On macOS the launcher shows in the Dock as "Social Sanitizer", not "Python". On Linux, if
+double-clicking the `.desktop` file in this folder doesn't start the app, right-click it
+and choose **Allow Launching**.
+
+When the app starts from a launcher, its output goes to a log file:
+
+| System | Log file |
+| --- | --- |
+| macOS | `~/Library/Logs/Social Sanitizer/app.log` |
+| Windows | `%LOCALAPPDATA%\Social Sanitizer\Logs\app.log` |
+| Linux | Your desktop's session log (usually `journalctl --user`) |
 
 Options:
 
@@ -88,7 +125,8 @@ If the LLM can't load (for example, torch isn't installed or the download fails)
 falls back to the keyword rules and shows the reason in the status bar.
 
 Your browser login is stored separately from your normal browser, in the app's
-data folder (`~/Library/Application Support/Social Sanitizer` on macOS).
+data folder: `~/Library/Application Support/Social Sanitizer` on macOS,
+`%LOCALAPPDATA%\Social Sanitizer` on Windows, and `~/.local/share/Social Sanitizer` on Linux.
 
 ### How it works
 

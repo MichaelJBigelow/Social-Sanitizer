@@ -93,10 +93,10 @@ if [[ -x "$framework_stub" ]]; then
   codesign --force --sign - "$APP/Contents/MacOS/Python" 2>/dev/null
 fi
 
-# Icon: draw a PNG with Qt, then turn it into an .icns.
+# Icon: turn the packaged PNG into an .icns.
 work="$(mktemp -d)"
 trap 'rm -rf "$work"' EXIT
-"$PY" "$REPO/scripts/make_icon.py" "$work/icon.png"
+cp "$REPO/src/social_sanitizer/assets/icon.png" "$work/icon.png"
 mkdir "$work/AppIcon.iconset"
 for size in 16 32 128 256 512; do
   sips -z $size $size "$work/icon.png" --out "$work/AppIcon.iconset/icon_${size}x${size}.png" >/dev/null
