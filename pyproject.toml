@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "social-sanitizer"
+version = "0.1.0"
+description = "Desktop app that finds and helps report creepy comments on Instagram posts."
+readme = "README.md"
+license-files = ["LICENSE"]
+requires-python = ">=3.10"
+dependencies = [
+    "PySide6>=6.8",
+    "platformdirs>=4",
+]
+
+[project.optional-dependencies]
+# The local LLM. Kept optional so the GUI can run (with the keyword
+# fallback) on machines where torch isn't installed yet.
+llm = [
+    "torch>=2.6",
+    "transformers>=4.46",
+]
+dev = [
+    "pytest>=8",
+]
+
+[project.scripts]
+social-sanitizer = "social_sanitizer.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+social_sanitizer = ["js/*.js", "demo/*.html"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
