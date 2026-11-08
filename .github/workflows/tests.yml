@@ -1,0 +1,79 @@
+name: Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    name: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    env:
+      QT_QPA_PLATFORM: offscreen
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install QtWebEngine system libraries (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libegl1 libgl1 libnss3 libxkbcommon0 libfontconfig1 libdbus-1-3 libasound2t64 \
+            libxcomposite1 libxdamage1 libxrandr2 libxtst6 libxkbfile1 libglib2.0-0t64 \
+            libxshmfence1 libgbm1 libevent-2.1-7t64 libxslt1.1 libminizip1t64 desktop-file-utils
+
+      # The launcher scripts expect the venv at .venv. torch is left out to keep CI fast;
+      # the LLM tests are opt-in and skip without it.
+      - name: Create venv and install
+        shell: bash
+        run: |
+          python -m venv .venv
+          if [ "$RUNNER_OS" = "Windows" ]; then PY=.venv/Scripts/python; else PY=.venv/bin/python; fi
+          $PY -m pip install --upgrade pip
+          $PY -m pip install -e ".[dev]"
+          echo "PY=$PY" >> "$GITHUB_ENV"
+
+      - name: Run tests
+        shell: bash
+        run: $PY -m pytest -v
+
+      - name: Build launcher (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          mkdir -p "$RUNNER_TEMP/apps"
+          scripts/make-mac-launcher.sh "$RUNNER_TEMP/apps"
+          test -x "$RUNNER_TEMP/apps/Social Sanitizer.app/Contents/MacOS/social-sanitizer"
+          plutil -lint "$RUNNER_TEMP/apps/Social Sanitizer.app/Contents/Info.plist"
+
+      - name: Build launcher (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          scripts/make-linux-launcher.sh
+          desktop-file-validate ~/.local/share/applications/social-sanitizer.desktop
+
+      - name: Build launcher (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          powershell -ExecutionPolicy Bypass -File scripts\make-windows-launcher.ps1
+          $link = (New-Object -ComObject WScript.Shell).CreateShortcut("$PWD\Social Sanitizer.lnk")
+          if (-not $link.TargetPath.EndsWith('pythonw.exe')) { throw "Shortcut target is $($link.TargetPath)" }
+          if (-not (Test-Path "$env:LOCALAPPDATA\Social Sanitizer\icon.ico")) { throw "Icon missing" }
+
+      - name: Start the app with no console (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          # pythonw.exe is what the shortcut runs; the app must survive having no stdout/stderr.
+          $p = Start-Process -FilePath .venv\Scripts\pythonw.exe -ArgumentList '-m social_sanitizer --demo --backend keyword' -PassThru
+          Start-Sleep -Seconds 20
+          if ($p.HasExited) { Get-Content "$env:LOCALAPPDATA\Social Sanitizer\Logs\app.log" -ErrorAction SilentlyContinue; throw "App exited early with code $($p.ExitCode)" }
+          Stop-Process -Id $p.Id

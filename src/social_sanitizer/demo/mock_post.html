@@ -1,0 +1,94 @@
+<!doctype html>
+<!--
+  Offline stand-in for an Instagram post page, used by `social-sanitizer --demo` and the
+  tests. It copies the structure the comment extractor relies on (username links,
+  <time>, dir="auto" text, nested replies, UI buttons), not Instagram's look.
+  All names and comments are made up.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Demo post • Social Sanitizer</title>
+<style>
+  body { font: 14px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; margin: 0; background: #fafafa; color: #262626; }
+  article { max-width: 560px; margin: 24px auto; background: #fff; border: 1px solid #dbdbdb; border-radius: 8px; }
+  header { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid #efefef; }
+  .avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #f58529, #dd2a7b); display: inline-block; }
+  .photo { height: 320px; background: linear-gradient(160deg, #ffd6a5, #fdffb6 40%, #9bf6ff); }
+  ul { list-style: none; margin: 0; padding: 8px 16px 16px; }
+  li { padding: 8px 0; }
+  .row { display: flex; gap: 10px; }
+  a { color: #262626; font-weight: 600; text-decoration: none; }
+  .meta { color: #8e8e8e; font-size: 12px; display: flex; gap: 12px; margin-top: 4px; }
+  button { background: none; border: 0; color: #8e8e8e; font-size: 12px; padding: 0; cursor: pointer; }
+  .replies { margin-left: 42px; }
+</style>
+</head>
+<body>
+<main>
+<article>
+  <header>
+    <a href="/maya.paints/"><span class="avatar"></span></a>
+    <div><a href="/maya.paints/"><span dir="auto">maya.paints</span></a></div>
+  </header>
+  <div class="photo"></div>
+  <ul>
+    <li><div class="row"><a href="/maya.paints/"><span class="avatar"></span></a><div>
+      <h2><a href="/maya.paints/"><span dir="auto">maya.paints</span></a></h2>
+      <span dir="auto">Finished the sunset series today! Swipe for the full set 🌅</span>
+      <div class="meta"><time datetime="2026-11-01T18:00:00Z">6d</time></div>
+    </div></div></li>
+
+    <li><div class="row"><a href="/jordan_r/"><span class="avatar"></span></a><div>
+      <h3><a href="/jordan_r/"><span dir="auto">jordan_r</span></a></h3>
+      <span dir="auto">These colors are incredible, do you sell prints?</span>
+      <div class="meta"><time datetime="2026-11-02T10:00:00Z">5d</time><span>3 likes</span><button>Reply</button></div>
+    </div></div>
+      <ul class="replies">
+        <li><div class="row"><a href="/maya.paints/"><span class="avatar"></span></a><div>
+          <h3><a href="/maya.paints/"><span dir="auto">maya.paints</span></a></h3>
+          <span dir="auto">Thank you! Shop link is in my bio 💛</span>
+          <div class="meta"><time datetime="2026-11-02T11:00:00Z">5d</time><button>Reply</button></div>
+        </div></div></li>
+        <li><div class="row"><a href="/xx_dave_xx/"><span class="avatar"></span></a><div>
+          <h3><a href="/xx_dave_xx/"><span dir="auto">xx_dave_xx</span></a></h3>
+          <span dir="auto">forget the prints, send me pics of you instead 😏</span>
+          <div class="meta"><time datetime="2026-11-02T12:00:00Z">5d</time><button>Reply</button></div>
+        </div></div></li>
+      </ul>
+    </li>
+
+    <li><div class="row"><a href="/big_tony88/"><span class="avatar"></span></a><div>
+      <h3><a href="/big_tony88/"><span dir="auto">big_tony88</span></a></h3>
+      <span dir="auto">hey beautiful check ur dms, wanna meet up this weekend?</span>
+      <div class="meta"><time datetime="2026-11-03T09:00:00Z">4d</time><button>Reply</button><button>See translation</button></div>
+    </div></div></li>
+
+    <li><div class="row"><a href="/sam.k/"><span class="avatar"></span></a><div>
+      <h3><a href="/sam.k/"><span dir="auto">sam.k</span></a></h3>
+      <span dir="auto">Which brushes do you use for the clouds? <a href="/maya.paints/">@maya.paints</a></span>
+      <div class="meta"><time datetime="2026-11-03T15:00:00Z">4d</time><span>1 like</span><button>Reply</button></div>
+    </div></div></li>
+
+    <li><div class="row"><a href="/realtalk_guy/"><span class="avatar"></span></a><div>
+      <h3><a href="/realtalk_guy/"><span dir="auto">realtalk_guy</span></a></h3>
+      <span dir="auto">nobody cares about your little paintings, ugly attention seeker</span>
+      <div class="meta"><time datetime="2026-11-04T08:00:00Z">3d</time><button>Reply</button></div>
+    </div></div></li>
+
+    <li><div class="row"><a href="/priya.designs/"><span class="avatar"></span></a><div>
+      <h3><a href="/priya.designs/"><span dir="auto">priya.designs</span></a></h3>
+      <span dir="auto">Obsessed with the third one. Congrats on finishing the series!</span>
+      <div class="meta"><time datetime="2026-11-05T19:00:00Z">2d</time><span>5 likes</span><button>Reply</button></div>
+    </div></div></li>
+
+    <li><div class="row"><a href="/crypto_mentor_jay/"><span class="avatar"></span></a><div>
+      <h3><a href="/crypto_mentor_jay/"><span dir="auto">crypto_mentor_jay</span></a></h3>
+      <span dir="auto">Ladies, earn $5,000 a week from home!! DM me to learn how 💸</span>
+      <div class="meta"><time datetime="2026-11-06T07:00:00Z">1d</time><button>Reply</button></div>
+    </div></div></li>
+  </ul>
+</article>
+</main>
+</body>
+</html>

@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+
+# Virtual environments
+.venv/
+venv/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+
+# Local macOS launcher built by scripts/make-mac-launcher.sh
+/Social Sanitizer.app/
+
+# Local Windows and Linux launchers built by scripts/make-*-launcher
+/Social Sanitizer.lnk
+/Social Sanitizer.desktop
